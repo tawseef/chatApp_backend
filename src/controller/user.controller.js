@@ -1,0 +1,38 @@
+const httpStatus = require("http-status");
+const AuthService = require("../service/userAuth.service");
+const AuthServiceInstance = new AuthService();
+const hStatus = require('statuses')
+
+// Signup Function
+async function handleUserSignup(req, res) {
+  try {
+    const user = await AuthServiceInstance.signup(req.body);
+    return res
+      .status(httpStatus.OK)
+      .json({ message: "Signup Successful", username: user.name });
+  } catch (error) {
+    return res
+      .status(httpStatus.BAD_REQUEST)
+      .json({ message: "Check credential", error });
+  }
+}
+
+// Login Function
+async function handleUserLogin(req, res) {
+  try {
+    const result = await AuthServiceInstance.login(req.body);
+    // Storing token to cookie
+    res.cookie("token", result.token, {
+      maxAge: 60 * 60 * 1000,
+      httpOnly: true,
+    });
+
+    res.json(result);
+  } catch (error) {
+    res
+      .status(httpStatus.BAD_REQUEST)
+      .json({ message: "User does not exist", error });
+  }
+}
+
+module.exports = { handleUserSignup, handleUserLogin };
