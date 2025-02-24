@@ -10,6 +10,7 @@ const loginBodyValidaton = Joi.object().keys({
 const signUpBodyValidation = Joi.object().keys({
     name: Joi.string().required(),
     email: Joi.string().required(),
+    phone: Joi.string().required(),
     password: Joi.string().required()
 });
 
